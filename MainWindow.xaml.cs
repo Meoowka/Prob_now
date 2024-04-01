@@ -1,5 +1,6 @@
 ﻿using Aspose.Html.Accessibility;
 using Aspose.Html.Toolkit.Markdown.Syntax;
+using Prob_now.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Prob_now
 {
@@ -16,96 +18,43 @@ namespace Prob_now
     /// </summary>
     public partial class MainWindow : Window
     {
+        ModulesProvider modulesProvider = new ModulesProvider();
+
         public MainWindow()
         {
             InitializeComponent();
         }
-        public ObservableCollection<Files> dir_r { get; set; }
 
-        public void Create_md(List<string> file_md)
-        {
-            const string file_path = @"E:\";
-            var md = new MarkdownSyntaxTree(new Aspose.Html.Configuration());
-            var mdf = md.SyntaxFactory;
-
-            for (int i = 0; i < file_md.Count; i++)
-            {
-                var head = mdf.AtxHeading(file_md[i] + '\n');
-                md.AppendChild(head);
-            }
-            string savePath = Path.Combine(file_path, "version.md");
-            md.Save(savePath);
-        }
-       public List<Files> list_files = new List<Files>();
-
-        public void Directory_info(DirectoryInfo entrypoint)
-        {
-            List<string> list = new List<string>();
-           
-            foreach (FileInfo FL in entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
-            {
-                var fvi = FileVersionInfo.GetVersionInfo(FL.FullName);
-                string? autor_r = fvi.CompanyName;
-                string? version = fvi.FileVersion;
-
-                if (version != null)
-                {
-                    list.Add(version);
-                }
-                
-                var item_file_on_disk = new Files(FL.Name.Split('.')[0],
-                            version,
-                            FL.CreationTime,
-                            autor_r,
-                            FL.Extension);
-                list_files.Add(item_file_on_disk);
-                List_view.Items.Add(item_file_on_disk);
-            }
-            Create_md(list);
-        }
-        public void File_info_on_version(DirectoryInfo entrypoint, string ID_inf)
-        {
-            
-            foreach (FileInfo FL in entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
-            {
-                var fvi = FileVersionInfo.GetVersionInfo(FL.FullName);
-                string? autor_r = fvi.CompanyName;
-                string? version = fvi.FileVersion;
-                var item_file_on_disk = new Files(FL.Name.Split('.')[0],
-                            version,
-                            FL.CreationTime,
-                            autor_r,
-                            FL.Extension);
-
-                if (ID_inf == item_file_on_disk.Id_ver)
-                {
-                    for (int i = 0; i < list_files.Count; i++)
-                    { 
-                        if (list_files[i].Name_File.Contains(item_file_on_disk.Name_File))
-                        {
-                            List_view_info.Items.Add(item_file_on_disk);
-                        }
-
-                    }
-                }
-
-            }
-
-        }
+        public Module[] list_files = Array.Empty<Module>();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             List_view.Items.Clear();
             DirectoryInfo currentdirectory = new DirectoryInfo(@"E:\Folder_update");
-            Directory_info(currentdirectory);
+            list_files = modulesProvider.ListModules(currentdirectory);
+            foreach (var item in list_files)
+            {
+                List_view.Items.Add(item);
+            }
         }
 
         private void List_view_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             List_view_info.Items.Clear();
-            var point = List_view.SelectedItem as Files;
-            DirectoryInfo currentdirectory = new DirectoryInfo(@"E:\Folder_update"); 
-            File_info_on_version(currentdirectory, point.Id_ver);
+            var point = List_view.SelectedItem as Module;
+            DirectoryInfo currentdirectory = new DirectoryInfo(@"E:\Folder_update");
+
+            ListView view = sender as ListView;
+
+            var index = view.SelectedIndex;
+            if (index == -1)
+                return;
+
+            var items = modulesProvider.ListModuleInfo(new Guid(list_files[index].Id_ver), currentdirectory);
+            foreach (var item in items)
+            {
+                List_view.Items.Add(item);
+            }
         }
     }
 }
