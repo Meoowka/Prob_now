@@ -30,8 +30,7 @@ namespace Prob_now
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             List_view.Items.Clear();
-            DirectoryInfo currentdirectory = new DirectoryInfo(@"E:\Folder_update");
-            list_files = modulesProvider.ListModules(currentdirectory);
+            list_files = modulesProvider.ListModules();
             foreach (var item in list_files)
             {
                 List_view.Items.Add(item);
@@ -42,19 +41,15 @@ namespace Prob_now
         {
             List_view_info.Items.Clear();
             var point = List_view.SelectedItem as Module;
-            DirectoryInfo currentdirectory = new DirectoryInfo(@"E:\Folder_update");
+     
+           
 
-            ListView view = sender as ListView;
 
-            var index = view.SelectedIndex;
-            if (index == -1)
-                return;
-
-            var items = modulesProvider.ListModuleInfo(new Guid(list_files[index].Id_ver), currentdirectory);
-            foreach (var item in items)
-            {
-                List_view.Items.Add(item);
-            }
+            //var items = modulesProvider.ListModuleInfo(new Guid(list_files[].Id_ver), currentdirectory);
+            //foreach (var item in items)
+            //{
+            //    List_view.Items.Add(item);
+            //}
         }
     }
 }

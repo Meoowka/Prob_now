@@ -17,13 +17,13 @@ namespace Prob_now
 {
     public class ModulesProvider : IModulesProvider
     {
-        public Module[] ListModuleInfo(Guid id, DirectoryInfo entrypoint)
+        public Module[] ListModuleInfo(Guid id)
         {
+            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
             List<Module> modules = new List<Module>();
-            foreach (FileInfo FL in entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
+            foreach (FileInfo FL in  entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
             {
                 var fvi = FileVersionInfo.GetVersionInfo(FL.FullName);
-                string? autor_r = fvi.CompanyName;
                 string? version = fvi.FileVersion;
                 var item_file_on_disk = new Module(FL.Name.Split('.')[0],
                             version,
@@ -33,7 +33,7 @@ namespace Prob_now
 
                 if (id.ToString() == item_file_on_disk.Id_ver)
                 {
-                    var files = ListModules(entrypoint);
+                    var files = ListModules();
                     for (int i = 0; i < files.Count(); i++)
                     {
                         if (files[i].Name_File.Contains(item_file_on_disk.Name_File))
@@ -46,16 +46,18 @@ namespace Prob_now
                 return modules.ToArray();
         }
 
-        public Module GetModule(Guid id, DirectoryInfo entrypoint)
+        public Module GetModule(Guid id)
         {
-            var modules = ListModules(entrypoint);
+            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
+            var modules = ListModules();
 
-            return modules.Where(x => x.Equals(id.ToString())).FirstOrDefault();
+            return modules?.Where(x => x.Equals(id.ToString())).FirstOrDefault();
         }
 
 
-        public Module[] ListModules(DirectoryInfo entrypoint)
+        public Module[] ListModules()
         {
+            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
             List<Module> modules = new List<Module>();
             List<string> list = new List<string>();
             foreach (FileInfo FL in entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))

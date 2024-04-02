@@ -10,8 +10,8 @@ namespace Prob_now.Interfaces
 {
     public interface IModulesProvider
     {
-        public Module[] ListModules(DirectoryInfo dir);
-
-        public Module GetModule(Guid id, DirectoryInfo dir);
+        public Module[] ListModules();
+        public Module GetModule(Guid id);   
+      
     }
 }
