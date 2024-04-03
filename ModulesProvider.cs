@@ -111,47 +111,47 @@ namespace Prob_now
         {
           
             var listing = ftp.client.GetListing("", FtpListOption.Recursive);
-            Download_files();
+           // Download_files();
             
             
                 foreach (var item in listing)
-            {
-                try
                 {
-                    var file_extension = Path.GetExtension(item.FullName);
-                    var file_siz = ftp.client.GetFileSize(item.FullName);
-                    var file_size = file_siz / 1024 / 1024;
+                    try
+                    {
+                        var file_extension = Path.GetExtension(item.FullName);
+                        var file_siz = ftp.client.GetFileSize(item.FullName);
+                        var file_size = file_siz / 1024 / 1024;
              
 
-                    switch (item.Type)
-                    {
-                        case FtpObjectType.File:
+                        switch (item.Type)
+                        {
+                            case FtpObjectType.File:
 
-                            var item_file_on_disk = new Module(item.Name.Split('.')[0],
-                            file_size.ToString(), ftp.client.GetModifiedTime(item.FullName),
-                            file_extension);
-                            modules_ftp.Add(item_file_on_disk);
-                            break;
+                                var item_file_on_disk = new Module(item.Name.Split('.')[0],
+                                file_size.ToString(), ftp.client.GetModifiedTime(item.FullName),
+                                file_extension);
+                                modules_ftp.Add(item_file_on_disk);
+                                break;
+                        }
+
                     }
-
-                }
                 catch (UnauthorizedAccessException) { }
-            }
+                }
             return modules_ftp.ToArray();
         }
 
-        //public Module[] Download_files()
-        //{
-        //    GetFtp();
-        //    var listing = ftp.client.GetListing("", FtpListOption.Recursive);
+        public Module[] Download_files()
+        {
+            GetFtp();
+            var listing = ftp.client.GetListing("", FtpListOption.Recursive);
 
-        //    foreach (var item in listing)
-        //    {
-        //        ftp.client.DownloadFiles(@"E:\Folder_update", new[] {item.FullName}, FtpLocalExists.Skip);
-        
-        //    }
-        //    return mod.ToArray();
-        //}
+            foreach (var item in listing)
+            {
+                ftp.client.DownloadFiles(@"E:\Folder_update", new[] { item.FullName }, FtpLocalExists.Skip);
+
+            }
+            return mod.ToArray();
+        }
     }
 }
         
