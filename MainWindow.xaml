@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Prob_now"
         mc:Ignorable="d"
-       Title="AutoUp" Height="855" Width="955" ResizeMode="NoResize" >
+       Title="AutoUp" Height="855" Width="955" ResizeMode="NoResize" Loaded="Window_Loaded">
     <Grid Height="819" VerticalAlignment="Center" HorizontalAlignment="Center" Width="955">
         <ListView x:Name="List_view" SelectionChanged="List_view_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Auto" d:ItemsSource="{Binding Files}" Margin="10,10,0,0" SelectionMode="Single" HorizontalAlignment="Left"
                   Width="785" MaxWidth="820" Height="384" VerticalAlignment="Top">
@@ -13,8 +13,8 @@
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name_File}"  Width="120"/>
-                        <GridViewColumn Header="Дата изменения" DisplayMemberBinding="{Binding Versio}" Width="150"/>
-                        <GridViewColumn Header="Версия" DisplayMemberBinding="{Binding Date}" Width="130"/>
+                        <GridViewColumn Header="Версия" DisplayMemberBinding="{Binding Versio}" Width="150"/>
+                        <GridViewColumn Header="Дата изменения" DisplayMemberBinding="{Binding Date}" Width="130"/>
                         <GridViewColumn Header="Автор" DisplayMemberBinding="{Binding Autor_ver}" Width="200"/>
                         <GridViewColumn Header="Расширение" DisplayMemberBinding="{Binding Extension}" Width="200"/>
                     </GridView.Columns>
@@ -22,19 +22,19 @@
             </ListView.View>
         </ListView>
         <ListView x:Name="List_view_info" ScrollViewer.VerticalScrollBarVisibility="Auto" d:ItemsSource="{Binding Files}" Margin="10,417,0,0" SelectionMode="Single" HorizontalAlignment="Left"
-                  Width="785" MaxWidth="820" Height="392" VerticalAlignment="Top">
+                  Width="585" MaxWidth="820" Height="392" VerticalAlignment="Top">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name_File}"  Width="120"/>
-                        <GridViewColumn Header="Дата изменения" DisplayMemberBinding="{Binding Versio}" Width="150"/>
-                        <GridViewColumn Header="Версия" DisplayMemberBinding="{Binding Date}" Width="130"/>
-                        <GridViewColumn Header="Автор" DisplayMemberBinding="{Binding Autor_ver}" Width="200"/>
+                        <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding Versio}" Width="150"/>
+                        <GridViewColumn Header="Дата изменения" DisplayMemberBinding="{Binding Date}" Width="130"/>
                         <GridViewColumn Header="Расширение" DisplayMemberBinding="{Binding Extension}" Width="200"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>
         </ListView>
         <Button Content="Button" HorizontalAlignment="Left" Margin="835,10,0,0" VerticalAlignment="Top" Height="54" Width="55" Click="Button_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="862,124,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
     </Grid>
 </Window>

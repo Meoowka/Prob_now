@@ -23,9 +23,11 @@ namespace Prob_now
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         public Module[] list_files = Array.Empty<Module>();
+        
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -35,21 +37,28 @@ namespace Prob_now
             {
                 List_view.Items.Add(item);
             }
+           
         }
 
         private void List_view_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            List_view_info.Items.Clear();
-            var point = List_view.SelectedItem as Module;
-     
+       
            
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            List_view_info.Items.Clear();
+            list_files = modulesProvider.Listing_ftp();
+            foreach (var item in list_files)
+            {
+                List_view_info.Items.Add(item);
+            }
+        }
 
-            //var items = modulesProvider.ListModuleInfo(new Guid(list_files[].Id_ver), currentdirectory);
-            //foreach (var item in items)
-            //{
-            //    List_view.Items.Add(item);
-            //}
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            modulesProvider.GetFtp();
         }
     }
 }

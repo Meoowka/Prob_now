@@ -11,7 +11,9 @@ namespace Prob_now.Interfaces
     public interface IModulesProvider
     {
         public Module[] ListModules();
-        public Module GetModule(Guid id);   
+        public FtpConnectionHandler GetFtp();
+        public Module GetModule(Guid id);
+        public Module[] Listing_ftp();
       
     }
 }

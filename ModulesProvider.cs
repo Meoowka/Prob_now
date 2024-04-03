@@ -11,16 +11,22 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Controls;
-
+using System.Net;
+using FluentFTP;
 
 namespace Prob_now
 {
     public class ModulesProvider : IModulesProvider
     {
+        DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
+        FtpConnectionHandler ftp = new FtpConnectionHandler();
+
+        List<Module> modules = new List<Module>();
+        List<Module> modules_ftp = new List<Module>();
         public Module[] ListModuleInfo(Guid id)
         {
-            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
-            List<Module> modules = new List<Module>();
+            
+           
             foreach (FileInfo FL in  entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
             {
                 var fvi = FileVersionInfo.GetVersionInfo(FL.FullName);
@@ -45,25 +51,21 @@ namespace Prob_now
             }
                 return modules.ToArray();
         }
-
         public Module GetModule(Guid id)
         {
-            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
             var modules = ListModules();
 
             return modules?.Where(x => x.Equals(id.ToString())).FirstOrDefault();
         }
 
-
         public Module[] ListModules()
         {
-            DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
-            List<Module> modules = new List<Module>();
+          
             List<string> list = new List<string>();
-            foreach (FileInfo FL in entrypoint.GetFiles("*.*", System.IO.SearchOption.AllDirectories))
+            foreach (FileInfo FL in entrypoint.GetFiles("*.*"))
             {
                 var fvi = FileVersionInfo.GetVersionInfo(FL.FullName);
-                string? autor_r = fvi.CompanyName;
+
                 string? version = fvi.FileVersion;
 
                 if (version != null)
@@ -97,6 +99,43 @@ namespace Prob_now
 
 
 
+        public FtpConnectionHandler GetFtp()
+        {
+            ftp.ConnectFtp("192.168.56.1", new NetworkCredential("Meoowka","020509"));
+            return ftp;
+            
+        }
+
+        public Module[] Listing_ftp()
+        {
+          
+            var listing = ftp.client.GetListing("", FtpListOption.Recursive);
+
+            foreach (var item in listing)
+            {
+                try
+                {
+                    var file_extension = Path.GetExtension(item.FullName);
+                    var file_siz = ftp.client.GetFileSize(item.FullName);
+                    var file_size = file_siz / 1024 / 1024;
+             
+
+                    switch (item.Type)
+                    {
+                        case FtpObjectType.File:
+
+                            var item_file_on_disk = new Module(item.Name.Split('.')[0],
+                            file_size.ToString(), ftp.client.GetModifiedTime(item.FullName),
+                            file_extension);
+                            modules_ftp.Add(item_file_on_disk);
+                            break;
+                    }
+
+                }
+                catch (UnauthorizedAccessException) { }
+            }
+            return modules_ftp.ToArray();
+        }
     }
 }
         
