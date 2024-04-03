@@ -110,8 +110,10 @@ namespace Prob_now
         {
           
             var listing = ftp.client.GetListing("", FtpListOption.Recursive);
-
-            foreach (var item in listing)
+            Download_files();
+            
+            
+                foreach (var item in listing)
             {
                 try
                 {
@@ -133,6 +135,18 @@ namespace Prob_now
 
                 }
                 catch (UnauthorizedAccessException) { }
+            }
+            return modules_ftp.ToArray();
+        }
+
+        public Module[] Download_files()
+        {
+            GetFtp();
+            var listing = ftp.client.GetListing("", FtpListOption.Recursive);
+
+            foreach (var item in listing)
+            {
+                ftp.client.DownloadFiles(@"E:\Folder_update", new[] {item.FullName}, FtpLocalExists.Skip);
             }
             return modules_ftp.ToArray();
         }
