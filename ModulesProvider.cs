@@ -23,6 +23,7 @@ namespace Prob_now
 
         List<Module> modules = new List<Module>();
         List<Module> modules_ftp = new List<Module>();
+        List<Module> mod = new List<Module>();
         public Module[] ListModuleInfo(Guid id)
         {
             
@@ -139,17 +140,18 @@ namespace Prob_now
             return modules_ftp.ToArray();
         }
 
-        public Module[] Download_files()
-        {
-            GetFtp();
-            var listing = ftp.client.GetListing("", FtpListOption.Recursive);
+        //public Module[] Download_files()
+        //{
+        //    GetFtp();
+        //    var listing = ftp.client.GetListing("", FtpListOption.Recursive);
 
-            foreach (var item in listing)
-            {
-                ftp.client.DownloadFiles(@"E:\Folder_update", new[] {item.FullName}, FtpLocalExists.Skip);
-            }
-            return modules_ftp.ToArray();
-        }
+        //    foreach (var item in listing)
+        //    {
+        //        ftp.client.DownloadFiles(@"E:\Folder_update", new[] {item.FullName}, FtpLocalExists.Skip);
+        
+        //    }
+        //    return mod.ToArray();
+        //}
     }
 }
         
