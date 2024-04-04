@@ -14,7 +14,8 @@ namespace Prob_now.Interfaces
         public FtpConnectionHandler GetFtp();
         public Module GetModule(Guid id);
         public Module[] Listing_ftp();
-        public Module[] Download_files();
+
+        public object Ftp_load(string files);
       
     }
 }

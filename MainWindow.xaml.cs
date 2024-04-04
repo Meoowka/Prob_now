@@ -1,10 +1,12 @@
 ﻿using Aspose.Html.Accessibility;
 using Aspose.Html.Toolkit.Markdown.Syntax;
+using FluentFTP;
 using Prob_now.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -56,9 +58,25 @@ namespace Prob_now
             }
         }
 
+     
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            
+            var files = List_view_info.SelectedItem as Module;
+            string files_r = files.Name_File.ToString()+files.Extension;
+            var result = (FtpStatus)modulesProvider.Ftp_load(files_r);
+            if (result == FluentFTP.FtpStatus.Success)
+            {
+                MessageBox.Show("Файл скачен");
+            }
+            
+           
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             modulesProvider.GetFtp();
+
         }
     }
 }

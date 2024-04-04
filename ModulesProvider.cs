@@ -2,28 +2,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prob_now.Entities;
 using Aspose.Html.Toolkit.Markdown.Syntax;
-using Prob_now;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Controls;
 using System.Net;
 using FluentFTP;
+using GroupDocs.Parser;
+using GroupDocs.Parser.Data;
+
 
 namespace Prob_now
 {
     public class ModulesProvider : IModulesProvider
     {
-        DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_update");
+        DirectoryInfo entrypoint = new DirectoryInfo(@"E:\Folder_updates");
         FtpConnectionHandler ftp = new FtpConnectionHandler();
 
         List<Module> modules = new List<Module>();
         List<Module> modules_ftp = new List<Module>();
         List<Module> mod = new List<Module>();
+
+        string path_load = "E:\\Folder_updates";
+        string path_download = "/AutoUp/";
+       
+
         public Module[] ListModuleInfo(Guid id)
         {
             
@@ -58,7 +61,6 @@ namespace Prob_now
 
             return modules?.Where(x => x.Equals(id.ToString())).FirstOrDefault();
         }
-
         public Module[] ListModules()
         {
           
@@ -69,21 +71,22 @@ namespace Prob_now
 
                 string? version = fvi.FileVersion;
 
-                if (version != null)
-                {
-                    list.Add(version);
-                }
-
                 var item_file_on_disk = new Module(FL.Name.Split('.')[0],
                             version,
                             FL.CreationTime,
                             FL.Extension);
                 modules.Add(item_file_on_disk);
+
+                if (version != null)
+                {
+                    list.Add(FL.Name + '\t' + version);
+                }
             }
             CreateMd(list);     //side effect
             return modules.ToArray();
 
         }
+
         private void CreateMd(List<string> file_md)
         {
             const string file_path = @"E:\";
@@ -109,25 +112,20 @@ namespace Prob_now
 
         public Module[] Listing_ftp()
         {
-          
             var listing = ftp.client.GetListing("", FtpListOption.Recursive);
-           // Download_files();
-            
-            
-                foreach (var item in listing)
+            foreach (var item in listing)
                 {
                     try
-                    {
-                        var file_extension = Path.GetExtension(item.FullName);
+                    { 
+                    var file_extension = Path.GetExtension(item.FullName);
                         var file_siz = ftp.client.GetFileSize(item.FullName);
                         var file_size = file_siz / 1024 / 1024;
-             
 
-                        switch (item.Type)
+                    switch (item.Type)
                         {
                             case FtpObjectType.File:
-
-                                var item_file_on_disk = new Module(item.Name.Split('.')[0],
+                           
+                            var item_file_on_disk = new Module(item.Name.Split('.')[0],
                                 file_size.ToString(), ftp.client.GetModifiedTime(item.FullName),
                                 file_extension);
                                 modules_ftp.Add(item_file_on_disk);
@@ -140,17 +138,11 @@ namespace Prob_now
             return modules_ftp.ToArray();
         }
 
-        public Module[] Download_files()
+
+
+        public object Ftp_load(string f)
         {
-            GetFtp();
-            var listing = ftp.client.GetListing("", FtpListOption.Recursive);
-
-            foreach (var item in listing)
-            {
-                ftp.client.DownloadFiles(@"E:\Folder_update", new[] { item.FullName }, FtpLocalExists.Skip);
-
-            }
-            return mod.ToArray();
+            return ftp.client.DownloadFile(path_load+"\\"+f,path_download+"/"+f);
         }
     }
 }

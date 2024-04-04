@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Aspose.HTML" Version="24.3.0" />
     <PackageReference Include="FluentFTP" Version="49.0.2" />
+    <PackageReference Include="GroupDocs.Parser" Version="24.2.1" />
   </ItemGroup>
 
 </Project>
